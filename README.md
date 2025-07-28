@@ -4,7 +4,7 @@ A lightweight and easy-to-use encryption/decryption utility for Node.js using AE
 
 ---
 
-## Features
+## ✨ Features
 
 - AES-256-CBC encryption by default (customizable)
 - Supports configurable encoding, key length, password, salt, and IV size
@@ -29,6 +29,27 @@ pnpm install @a14313/encryption-utils
 ```
 
 ## Usage
+
+## 🔧 Cryptography Options Table
+
+> encrypt(payload: string, options)
+
+> decrypt(payload: string, iv: string, options)
+
+### `options`
+
+| Option           | Type                             | Required | Default     | Description                                                                |
+| ---------------- | -------------------------------- | -------- | ----------- | -------------------------------------------------------------------------- |
+| `algorithm`      | `string`                         | No       | aes-256-cbc | Encryption algorithm (e.g., `'aes-256-cbc'`).                              |
+| `password`       | `string`                         | ✅ Yes   | -           | Password used to derive the encryption/decryption key.                     |
+| `salt`           | `string`                         | ✅ Yes   | -           | Salt used in key derivation.                                               |
+| `keyLength`      | `number`                         | No       | 32          | Length of the derived key in bytes (`16`, `24`, `32`, etc.).               |
+| `ivSize`         | `number`                         | No       | 16          | Size of the IV in bytes (usually `16` for AES).                            |
+| `type`           | `'encryption'` \| `'decryption'` | ✅ Yes   | -           | Operation mode to perform. This is required for type discrimination        |
+| `encodingInput`  | `'utf8'`                         | No       | `'utf8'`.   | Encoding of the input string. For encryption, `utf8`. For decryption `hex` |
+| `encodingOutput` | `'hex'` \| `'base64'`            | No       | `'hex'`.    | Output format of the encrypted string. For decryption, `utf8`.             |
+
+---
 
 ### 🔐 Encryption
 
@@ -75,7 +96,7 @@ Plus, the attacker needs the password and salt. So keep it on the secrets manage
 
 ### How to generate a secure password and salt
 
-_You should have a nodejs or nvm installed on your machine._
+_You should have a [NodeJS](https://nodejs.org/en) or [NVM](https://github.com/nvm-sh/nvm/blob/master/README.md) installed on your machine._
 
 1. Open terminal
 2. type `node`. This will enter the node REPL.
