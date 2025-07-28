@@ -1,6 +1,6 @@
 {
 	"name": "@a14313/encryption-utils",
-	"version": "0.0.2",
+	"version": "0.1.0",
 	"description": "A TypeScript utility for encryption using Node.js crypto",
 	"author": "https://github.com/A14313",
 	"license": "MIT",
