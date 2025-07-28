@@ -71,6 +71,9 @@ const encrypted = encrypt('hello world', {
 
 ```
 
+Dont worry about the `iv` being returned. It is needed for decrypting the data on your other service. Even when an attacker gets the `iv`, it is unique in every encryption 😉. This prevents the producing of `identical plaintext blocks` [_Learn more about plaintext blocks_](https://www.sciencedirect.com/topics/computer-science/plaintext-block). <br />
+Plus, the attacker needs the password and salt. So keep it on the secrets manager or .env.
+
 ### 🔓 Decryption
 
 ```TS
@@ -86,9 +89,6 @@ const decrypted = decrypt(encrypted.value, encrypted.iv, {
 
 // RETURN: hello world
 ```
-
-Dont worry about the `iv` being returned. It is needed for decrypting the data on your other service. Even when an attacker gets the `iv`, it is unique in every encryption 😉. This prevents the producing of `identical plaintext blocks` [_Learn more about plaintext blocks_](https://www.sciencedirect.com/topics/computer-science/plaintext-block). <br />
-Plus, the attacker needs the password and salt. So keep it on the secrets manager or .env.
 
 ## 🚨 Important
 
