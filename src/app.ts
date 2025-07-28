@@ -1,5 +1,5 @@
-import { createCipheriv, randomBytes, scryptSync } from 'crypto';
-import { type IEncryptionOptions, IEncryptionReturn } from '@/types';
+import { createCipheriv, randomBytes, scryptSync, createDecipheriv } from 'crypto';
+import { type IEncryptionOptions, IEncryptionReturn, IDecryptionOptions } from '@/types';
 
 /**
  * Encrypts a given payload using the provided encryption or the default is 'AES-256-CBC'.
@@ -41,4 +41,30 @@ export function encrypt(payload: string, options: IEncryptionOptions): IEncrypti
 		console.error(message);
 		throw new Error(message);
 	}
+}
+
+export function decrypt(payload: string, iv: string, options: IDecryptionOptions) {
+	// Validation
+	if (!payload) {
+		throw new Error('Payload is required for the decryption process.');
+	}
+
+	if (!options.password?.trim() || !options.salt?.trim()) {
+		throw new Error('Both password and salt are required for decryption.');
+	}
+	const algorithm = options.algorithm || 'aes-256-cbc';
+	const password = options.password;
+	const salt = options.salt;
+	const keyLength = options.keyLength || 32;
+	const encodingInput = options.encodingInput || 'hex';
+	const encodingOutput = options.encodingOutput || 'utf8';
+
+	const key = scryptSync(password, salt, keyLength);
+	const bufferedIv = Buffer.from(iv, encodingInput);
+
+	const decipher = createDecipheriv(algorithm, key, bufferedIv);
+	let decrypted = decipher.update(payload, encodingInput, encodingOutput);
+	decrypted += decipher.final(encodingOutput);
+
+	return decrypted;
 }
