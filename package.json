@@ -6,6 +6,9 @@
 	"license": "MIT",
 	"main": "dist/app.js",
 	"types": "dist/app.d.ts",
+	"files": [
+		"dist"
+	],
 	"scripts": {
 		"test": "echo \"Error: no test specified\" && exit 1",
 		"dev": "concurrently -k \"tsup --watch\" \"nodemon dist/app.js\"",
@@ -24,11 +27,8 @@
 		"concurrently": "^9.2.0",
 		"nodemon": "^3.1.10",
 		"prettier": "^3.6.2",
+		"tsup": "^8.5.0",
 		"typescript": "^5.8.3"
-	},
-	"dependencies": {
-		"@a14313/encryption-utils": "^0.0.2",
-		"tsup": "^8.5.0"
 	},
 	"repository": {
 		"type": "git",
