@@ -27,6 +27,7 @@
 		"typescript": "^5.8.3"
 	},
 	"dependencies": {
+		"@a14313/encryption-utils": "^0.0.2",
 		"tsup": "^8.5.0"
 	},
 	"repository": {
