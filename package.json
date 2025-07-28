@@ -1,5 +1,5 @@
 {
-	"name": "@A14313/encryption-utils",
+	"name": "@a14313/encryption-utils",
 	"version": "0.0.1",
 	"description": "A TypeScript utility for encryption using Node.js crypto",
 	"author": "https://github.com/A14313",
@@ -28,5 +28,13 @@
 	},
 	"dependencies": {
 		"tsup": "^8.5.0"
-	}
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/A14313/encryption-utils.git"
+	},
+	"bugs": {
+		"url": "https://github.com/A14313/encryption-utils/issues"
+	},
+	"homepage": "https://github.com/A14313/encryption-utils#readme"
 }
