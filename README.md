@@ -107,7 +107,7 @@ _You should have a [NodeJS](https://nodejs.org/en) or [NVM](https://github.com/n
 
 _Note: For passwords it is recommended to have `32` bytes for the length, and `16` bytes for the salt._
 
-The generated `password` and `salt` should be the same on the service that is decrypting the data, otherwise it will fail.
+The generated `password` and `salt` for encryption should be the same on the service that is decrypting the data, otherwise it will fail.
 
 _**Always put the passwords, salts, and secrets on the environment**_
 
