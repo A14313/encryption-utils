@@ -57,24 +57,30 @@ function encrypt(payload, options) {
 }
 function decrypt(payload, iv, options) {
   var _a, _b;
-  if (!payload) {
-    throw new Error("Payload is required for the decryption process.");
+  try {
+    if (!payload) {
+      throw new Error("Payload is required for the decryption process.");
+    }
+    if (!((_a = options.password) == null ? void 0 : _a.trim()) || !((_b = options.salt) == null ? void 0 : _b.trim())) {
+      throw new Error("Both password and salt are required for decryption.");
+    }
+    const algorithm = options.algorithm || "aes-256-cbc";
+    const password = options.password;
+    const salt = options.salt;
+    const keyLength = options.keyLength || 32;
+    const encodingInput = options.encodingInput || "hex";
+    const encodingOutput = options.encodingOutput || "utf8";
+    const key = (0, import_crypto.scryptSync)(password, salt, keyLength);
+    const bufferedIv = Buffer.from(iv, encodingInput);
+    const decipher = (0, import_crypto.createDecipheriv)(algorithm, key, bufferedIv);
+    let decrypted = decipher.update(payload, encodingInput, encodingOutput);
+    decrypted += decipher.final(encodingOutput);
+    return decrypted;
+  } catch (err) {
+    const message = err instanceof Error ? `Error decrypting data. Check the salt or password: ${err.message}` : "Unknown error";
+    console.error(message);
+    throw new Error(message);
   }
-  if (!((_a = options.password) == null ? void 0 : _a.trim()) || !((_b = options.salt) == null ? void 0 : _b.trim())) {
-    throw new Error("Both password and salt are required for decryption.");
-  }
-  const algorithm = options.algorithm || "aes-256-cbc";
-  const password = options.password;
-  const salt = options.salt;
-  const keyLength = options.keyLength || 32;
-  const encodingInput = options.encodingInput || "hex";
-  const encodingOutput = options.encodingOutput || "utf8";
-  const key = (0, import_crypto.scryptSync)(password, salt, keyLength);
-  const bufferedIv = Buffer.from(iv, encodingInput);
-  const decipher = (0, import_crypto.createDecipheriv)(algorithm, key, bufferedIv);
-  let decrypted = decipher.update(payload, encodingInput, encodingOutput);
-  decrypted += decipher.final(encodingOutput);
-  return decrypted;
 }
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
