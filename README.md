@@ -40,7 +40,7 @@ pnpm install @a14313/encryption-utils
 
 | Option           | Type                             | Required | Default     | Description                                                                |
 | ---------------- | -------------------------------- | -------- | ----------- | -------------------------------------------------------------------------- |
-| `algorithm`      | `string`                         | No       | aes-256-cbc | Encryption algorithm (e.g., `'aes-256-cbc'`).                              |
+| `algorithm`      | `string`                         | No       | aes-256-cbc | Encryption algorithm (e.g., `'aes-256-cfb'`).                              |
 | `password`       | `string`                         | ✅ Yes   | -           | Password used to derive the encryption/decryption key.                     |
 | `salt`           | `string`                         | ✅ Yes   | -           | Salt used in key derivation.                                               |
 | `keyLength`      | `number`                         | No       | 32          | Length of the derived key in bytes (`16`, `24`, `32`, etc.).               |
@@ -90,6 +90,78 @@ const decrypted = decrypt(encrypted.value, encrypted.iv, {
 // RETURN: hello world
 ```
 
+### More examples
+
+Most of the time you wanna encrypt more complicated data types other than string.<br />
+What if you want to encrypt a data other than string? A number, boolean, object, array, etc. <br />
+Place it on an object 😎.
+
+### 🔐 Encryption
+
+```TS
+const sampleObject = {
+    stringType: 'Hello, world!',
+    numberType: 42,
+    booleanType: true,
+    nullType: null,
+    objectType: {
+        nestedKey: 'nestedValue',
+    },
+    arrayType: [1, 'two', false, null],
+    dateType: new Date(),
+};
+```
+
+Then, stringify the object:
+
+```TS
+const encrypted = encrypt(JSON.stringify(sampleObject), {
+    password: 'test',
+    salt: 'salty',
+    type: 'encryption',
+});
+```
+
+Return:
+
+```bash
+{
+    message: 'Encrypted successfully',
+    iv: '3aa2876e83c2b7d232a26ae09070bc00',
+    value: '0e7c40d896dfb13f93dfcfc67e0f1b64c458abe44405e005240a6f53a8596df8955a143e740f5e1a4f9c34ed646c356239ce4df67433812212bde4af29820361374bfee977aea02ff0b62db43959859a60d2d7a98ce3a420c08981b4e189810e8913eb9ab0dac62ff9d32e64a373c9317cf548bfdf0fdd7cf34ec78018db7118dcb9612399a0fd3cdc8c5e6a89b92f1d2fedc6478298f3c425a57b4ab82dd9bdd41b8dc72bc2e9aa65606282d240a037111ac1ec1364269c188b244275942a0c17f7c052f67569c4ef7ccb604d263348b7037a0b4f130182cfe0917d1fbcc1fd'
+}
+```
+
+### 🔓 Decryption
+
+```TS
+const decrypted = decrypt(encrypted.value, encrypted.iv, {
+    password: 'test',
+    salt: 'salty',
+    type: 'decryption',
+});
+```
+
+Then, parse the returned string 😎:
+
+```TS
+console.log(JSON.parse(decrypted));
+```
+
+Return:
+
+```bash
+{
+    stringType: 'Hello, world!',
+    numberType: 42,
+    booleanType: true,
+    nullType: null,
+    objectType: { nestedKey: 'nestedValue' },
+    arrayType: [ 1, 'two', false, null ],
+    dateType: '2025-07-29T00:43:36.885Z',
+}
+```
+
 ## 🚨 Important
 
 > Generate a strong password and salt using crypto and save it on your environment (.env) or secrets manager (recommended).
@@ -114,3 +186,5 @@ _**Always put the passwords, salts, and secrets on the environment**_
 ---
 
 ### Happy HACKING 😉
+
+Made by developer for developer. Made with love ❤️
