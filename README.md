@@ -1,3 +1,4 @@
+[![npm version](https://img.shields.io/npm/v/@a14313/encryption-utils)](https://www.npmjs.com/package/@a14313/encryption-utils)
 # @a14313/encryption-utils
 
 A lightweight and easy-to-use encryption/decryption utility for Node.js using AES (default `aes-256-cbc`) and the built-in `crypto` module.
