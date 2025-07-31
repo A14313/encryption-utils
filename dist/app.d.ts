@@ -1,28 +1,39 @@
-interface IBaseCryptographyOptions {
-    algorithm?: string;
-    password: string;
-    salt: string;
-    keyLength?: number;
-    ivSize?: number;
-    type: 'encryption' | 'decryption';
-}
-interface IEncryptionOptions extends IBaseCryptographyOptions {
-    type: 'encryption';
-    encodingInput?: 'utf8';
-    encodingOutput?: 'hex' | 'base64';
-}
-interface IDecryptionOptions extends IBaseCryptographyOptions {
-    type: 'decryption';
-    encodingInput?: 'hex' | 'base64';
-    encodingOutput?: 'utf8';
-}
+import z from 'zod';
+
+declare const CryptographyOptionsSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
+    algorithm: z.ZodOptional<z.ZodString>;
+    password: z.ZodString;
+    salt: z.ZodString;
+    keyLength: z.ZodOptional<z.ZodNumber>;
+    ivSize: z.ZodOptional<z.ZodNumber>;
+    type: z.ZodLiteral<"encryption">;
+    encodingInput: z.ZodOptional<z.ZodLiteral<"utf8">>;
+    encodingOutput: z.ZodOptional<z.ZodEnum<{
+        hex: "hex";
+        base64: "base64";
+    }>>;
+}, z.core.$strip>, z.ZodObject<{
+    algorithm: z.ZodOptional<z.ZodString>;
+    password: z.ZodString;
+    salt: z.ZodString;
+    keyLength: z.ZodOptional<z.ZodNumber>;
+    ivSize: z.ZodOptional<z.ZodNumber>;
+    type: z.ZodLiteral<"decryption">;
+    encodingInput: z.ZodOptional<z.ZodEnum<{
+        hex: "hex";
+        base64: "base64";
+    }>>;
+    encodingOutput: z.ZodOptional<z.ZodLiteral<"utf8">>;
+}, z.core.$strip>]>;
+
 interface IEncryptionReturn {
     message: string;
     iv: string;
     value: string;
 }
+type CryptographyOptions = z.infer<typeof CryptographyOptionsSchema>;
 
-declare function encrypt(payload: string, options: IEncryptionOptions): IEncryptionReturn;
-declare function decrypt(payload: string, iv: string, options: IDecryptionOptions): string;
+declare function encrypt(payload: string, options: CryptographyOptions): IEncryptionReturn;
+declare function decrypt(payload: string, iv: string, options: CryptographyOptions): string;
 
 export { decrypt, encrypt };

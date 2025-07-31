@@ -54,6 +54,9 @@ pnpm install @a14313/encryption-utils
 
 ### 🔐 Encryption
 
+For commonJS<br />
+`const { encrypt } = require('@a14313/encryption-utils');`
+
 ```TS
 import { encrypt } from '@a14313/encryption-utils';
 
@@ -76,6 +79,9 @@ Dont worry about the `iv` being returned. It is needed for decrypting the data o
 Plus, the attacker needs the password and salt. So keep it on the secrets manager or .env.
 
 ### 🔓 Decryption
+
+For commonJS<br />
+`const { decrypt } = require('@a14313/encryption-utils');`
 
 ```TS
 import { decrypt } from '@a14313/encryption-utils';
