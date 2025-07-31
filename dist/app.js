@@ -90,12 +90,12 @@ function encrypt(payload, options) {
     const key = (0, import_crypto.scryptSync)(options.password, options.salt, keyLength);
     const iv = (0, import_crypto.randomBytes)(ivSize);
     const cipher = (0, import_crypto.createCipheriv)(algorithm, key, iv);
-    let encrypted2 = cipher.update(payload, encodingInput, encodingOutput);
-    encrypted2 += cipher.final(encodingOutput);
+    let encrypted = cipher.update(payload, encodingInput, encodingOutput);
+    encrypted += cipher.final(encodingOutput);
     return {
       message: "Encrypted successfully",
       iv: iv.toString(encodingOutput),
-      value: encrypted2
+      value: encrypted
     };
   } catch (err) {
     const message = err instanceof Error ? `Error encrypting data ${err.message}` : "Unknown error";
@@ -125,15 +125,6 @@ function decrypt(payload, iv, options) {
     throw new Error(message);
   }
 }
-var sampleObj = {
-  foo: "bar"
-};
-var encrypted = encrypt(JSON.stringify(sampleObj), {
-  password: "kjsdakljsdkjsdakljsdkjsdakljsd",
-  salt: "kjsdakljsdkjsdakljsdkjsdakljsdkjsdakljsd",
-  type: "encryption"
-});
-console.log("encrypted", encrypted);
 // Annotate the CommonJS export names for ESM import in node:
 0 && (module.exports = {
   decrypt,

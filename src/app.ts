@@ -69,15 +69,3 @@ export function decrypt(payload: string, iv: string, options: CryptographyOption
 		throw new Error(message);
 	}
 }
-
-const sampleObj = {
-	foo: 'bar',
-};
-
-const encrypted = encrypt(JSON.stringify(sampleObj), {
-	password: 'kjsdakljsdkjsdakljsdkjsdakljsd',
-	salt: 'kjsdakljsdkjsdakljsdkjsdakljsdkjsdakljsd',
-	type: 'encryption',
-});
-
-console.log('encrypted', encrypted);

@@ -2,11 +2,7 @@ import z from 'zod';
 
 const BaseCryptographyOptions = z.object({
 	algorithm: z.string().trim().optional(),
-	password: z
-		.string()
-		.trim()
-		.nonempty('Password is required')
-		.min(24, 'Password must be minimum of 24 characters'),
+	password: z.string().trim().nonempty('Password is required').min(24, 'Password must be minimum of 24 characters'),
 	salt: z.string().trim().nonempty('salt is required').min(16, 'salt must be minimum of 16 characters'),
 	keyLength: z.number().optional(),
 	ivSize: z.number().optional(),
