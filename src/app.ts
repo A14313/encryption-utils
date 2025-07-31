@@ -1,5 +1,7 @@
 import { createCipheriv, randomBytes, scryptSync, createDecipheriv } from 'crypto';
-import { type IEncryptionOptions, IEncryptionReturn, IDecryptionOptions } from '@/types';
+import { type IEncryptionReturn, CryptographyOptions } from '@/types';
+import { isValidPayload } from '@/utils';
+import { CryptographyOptionsSchema } from '@/schemas/encryptionOptions.schema';
 
 /**
  * Encrypts a given payload using the provided encryption or the default is 'AES-256-CBC'.
@@ -7,16 +9,10 @@ import { type IEncryptionOptions, IEncryptionReturn, IDecryptionOptions } from '
  * @returns {object} An object containing the encrypted value and initialization vector (iv).
  */
 
-export function encrypt(payload: string, options: IEncryptionOptions): IEncryptionReturn {
+export function encrypt(payload: string, options: CryptographyOptions): IEncryptionReturn {
 	try {
-		// Validation
-		if (!payload) {
-			throw new Error('Payload is required for the encryption process.');
-		}
-
-		if (!options.password?.trim() || !options.salt?.trim()) {
-			throw new Error('Both password and salt are required for encryption.');
-		}
+		const isValid = isValidPayload(CryptographyOptionsSchema, options);
+		if (!isValid.success) throw new Error('There was an error on the arguments');
 
 		const algorithm = options.algorithm || 'aes-256-cbc';
 		const encodingInput = options.encodingInput || 'utf8';
@@ -43,16 +39,12 @@ export function encrypt(payload: string, options: IEncryptionOptions): IEncrypti
 	}
 }
 
-export function decrypt(payload: string, iv: string, options: IDecryptionOptions) {
+export function decrypt(payload: string, iv: string, options: CryptographyOptions) {
 	try {
 		// Validation
-		if (!payload) {
-			throw new Error('Payload is required for the decryption process.');
-		}
+		const isValid = isValidPayload(CryptographyOptionsSchema, options);
+		if (!isValid.success) throw new Error('There was an error on the arguments');
 
-		if (!options.password?.trim() || !options.salt?.trim()) {
-			throw new Error('Both password and salt are required for decryption.');
-		}
 		const algorithm = options.algorithm || 'aes-256-cbc';
 		const password = options.password;
 		const salt = options.salt;
@@ -77,3 +69,15 @@ export function decrypt(payload: string, iv: string, options: IDecryptionOptions
 		throw new Error(message);
 	}
 }
+
+const sampleObj = {
+	foo: 'bar',
+};
+
+const encrypted = encrypt(JSON.stringify(sampleObj), {
+	password: 'kjsdakljsdkjsdakljsdkjsdakljsd',
+	salt: 'kjsdakljsdkjsdakljsdkjsdakljsdkjsdakljsd',
+	type: 'encryption',
+});
+
+console.log('encrypted', encrypted);

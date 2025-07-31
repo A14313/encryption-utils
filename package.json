@@ -38,5 +38,8 @@
 	"bugs": {
 		"url": "https://github.com/A14313/encryption-utils/issues"
 	},
-	"homepage": "https://github.com/A14313/encryption-utils#readme"
+	"homepage": "https://github.com/A14313/encryption-utils#readme",
+	"dependencies": {
+		"zod": "^4.0.11"
+	}
 }
