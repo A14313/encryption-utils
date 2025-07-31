@@ -1,6 +1,6 @@
-import { ZodSchema } from 'zod';
+import { ZodType } from 'zod';
 
-const isValidPayload = <T>(schema: ZodSchema<T>, payload: any) => {
+const isValidPayload = <T>(schema: ZodType<T>, payload: any) => {
 	const result = schema.safeParse(payload);
 
 	if (!result.success) {
@@ -13,7 +13,7 @@ const isValidPayload = <T>(schema: ZodSchema<T>, payload: any) => {
 				};
 			}),
 		};
-		console.dir(errorObj, {depth: null});
+		console.dir(errorObj, { depth: null });
 		return errorObj;
 	}
 	console.log('result', result);
