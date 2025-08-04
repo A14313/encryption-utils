@@ -1,6 +1,6 @@
 import z from 'zod';
 
-declare const CryptographyOptionsSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
+declare const EncryptionOptions: z.ZodObject<{
     algorithm: z.ZodOptional<z.ZodString>;
     password: z.ZodString;
     salt: z.ZodString;
@@ -13,7 +13,8 @@ declare const CryptographyOptionsSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
         hex: "hex";
         base64: "base64";
     }>>;
-}, z.core.$strip>, z.ZodObject<{
+}, z.core.$strip>;
+declare const DecryptionOptions: z.ZodObject<{
     algorithm: z.ZodOptional<z.ZodString>;
     password: z.ZodString;
     salt: z.ZodString;
@@ -26,16 +27,17 @@ declare const CryptographyOptionsSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
         base64: "base64";
     }>>;
     encodingOutput: z.ZodOptional<z.ZodLiteral<"utf8">>;
-}, z.core.$strip>]>;
+}, z.core.$strip>;
 
 interface IEncryptionReturn {
     message: string;
     iv: string;
     value: string;
 }
-type CryptographyOptions = z.infer<typeof CryptographyOptionsSchema>;
+type EncryptionOptionsInput = Omit<z.infer<typeof EncryptionOptions>, 'type'>;
+type DecryptionOptionsInput = Omit<z.infer<typeof DecryptionOptions>, 'type'>;
 
-declare function encrypt(payload: string, options: CryptographyOptions): IEncryptionReturn;
-declare function decrypt(payload: string, iv: string, options: CryptographyOptions): string;
+declare function encrypt(payload: string, options: EncryptionOptionsInput): IEncryptionReturn;
+declare function decrypt(payload: string, iv: string, options: DecryptionOptionsInput): string;
 
 export { decrypt, encrypt };

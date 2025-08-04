@@ -1,5 +1,5 @@
 import z, { ZodType } from 'zod';
-import { CryptographyOptionsSchema } from '@/schemas/encryptionOptions.schema';
+import { EncryptionOptions, DecryptionOptions } from '@/schemas/encryptionOptions.schema';
 
 export interface IEncryptionReturn {
 	message: string;
@@ -7,7 +7,9 @@ export interface IEncryptionReturn {
 	value: string;
 }
 
-export type CryptographyOptions = z.infer<typeof CryptographyOptionsSchema>;
+// Export user-facing options without `type`
+export type EncryptionOptionsInput = Omit<z.infer<typeof EncryptionOptions>, 'type'>;
+export type DecryptionOptionsInput = Omit<z.infer<typeof DecryptionOptions>, 'type'>;
 
 export interface IValidatePayloadParams<T> {
 	schema: ZodType<T>;

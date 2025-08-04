@@ -26,4 +26,4 @@ const DecryptionOptions = BaseCryptographyOptions.extend({
 // Discriminated union
 const CryptographyOptionsSchema = z.discriminatedUnion('type', [EncryptionOptions, DecryptionOptions]);
 
-export { CryptographyOptionsSchema };
+export { CryptographyOptionsSchema, EncryptionOptions, DecryptionOptions };
