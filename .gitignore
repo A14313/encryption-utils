@@ -25,3 +25,5 @@ dist-ssr
 .env
 
 **/*.tgz
+dist/
+build/

@@ -1,5 +1,11 @@
 # @a14313/encryption-utils
 
+## 1.2.2
+
+### Patch Changes
+
+- Add dist and build folder on the gitignore
+
 ## 1.2.1
 
 ### Patch Changes
