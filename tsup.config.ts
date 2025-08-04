@@ -8,4 +8,11 @@ export default defineConfig({
 	clean: true,
 	sourcemap: true,
 	tsconfig: './tsconfig.json',
+	minify: true,
+	minifyIdentifiers: true,
+	minifySyntax: true,
+	minifyWhitespace: true,
+	banner: {
+		js: '/** (c) 2025 Antonio Carlo Autor */',
+	},
 });
