@@ -1,5 +1,11 @@
 # @a14313/encryption-utils
 
+## 1.2.1
+
+### Patch Changes
+
+- a2cae4a: - Add includeLogs parameter for for the encrypt and decrypt functions. Also, on isValidPayload
+
 ## 1.2.0
 
 ### Minor Changes
