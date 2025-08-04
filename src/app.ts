@@ -1,9 +1,5 @@
 import { createCipheriv, randomBytes, scryptSync, createDecipheriv } from 'crypto';
-import {
-	type IEncryptionReturn,
-	EncryptionOptionsInput,
-	DecryptionOptionsInput,
-} from '@/types';
+import { type IEncryptionReturn, EncryptionOptionsInput, DecryptionOptionsInput } from '@/types';
 import { isValidPayload } from '@/utils';
 import { CryptographyOptionsSchema } from '@/schemas/encryptionOptions.schema';
 
@@ -21,7 +17,11 @@ export function encrypt(payload: string, options: EncryptionOptionsInput): IEncr
 			type: 'encryption',
 		} as const;
 
-		const isValid = isValidPayload(CryptographyOptionsSchema, mergedOptions);
+		const isValid = isValidPayload({
+			schema: CryptographyOptionsSchema,
+			payload: mergedOptions,
+			includeLogs: mergedOptions.includeLogs,
+		});
 		if (!isValid.success) throw new Error('There was an error on the arguments');
 
 		const algorithm = mergedOptions.algorithm || 'aes-256-cbc';
@@ -58,7 +58,11 @@ export function decrypt(payload: string, iv: string, options: DecryptionOptionsI
 		} as const;
 
 		// Validation
-		const isValid = isValidPayload(CryptographyOptionsSchema, mergedOptions);
+		const isValid = isValidPayload({
+			schema: CryptographyOptionsSchema,
+			payload: mergedOptions,
+			includeLogs: mergedOptions.includeLogs,
+		});
 		if (!isValid.success) throw new Error('There was an error on the arguments');
 
 		const algorithm = mergedOptions.algorithm || 'aes-256-cbc';
