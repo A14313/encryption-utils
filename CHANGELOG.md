@@ -1,5 +1,11 @@
 # @a14313/encryption-utils
 
+## 1.2.3
+
+### Patch Changes
+
+- b63bef5: Update README
+
 ## 1.2.2
 
 ### Patch Changes
