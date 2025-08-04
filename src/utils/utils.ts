@@ -1,7 +1,7 @@
-import { ZodType } from 'zod';
+import { type IValidatePayloadParams } from '@/types';
 
-const isValidPayload = <T>(schema: ZodType<T>, payload: any) => {
-	const result = schema.safeParse(payload);
+const isValidPayload = <T>(params: IValidatePayloadParams<T>) => {
+	const result = params.schema.safeParse(params.payload);
 
 	if (!result.success) {
 		const errorObj = {
@@ -13,10 +13,10 @@ const isValidPayload = <T>(schema: ZodType<T>, payload: any) => {
 				};
 			}),
 		};
-		console.dir(errorObj, { depth: null });
+		if (params.includeLogs) console.dir(errorObj, { depth: null });
 		return errorObj;
 	}
-	console.log('result', result);
+	if (params.includeLogs) console.log('result', result);
 	return { success: result.success, data: result.data };
 };
 

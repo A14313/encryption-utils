@@ -11,7 +11,11 @@ import { CryptographyOptionsSchema } from '@/schemas/encryptionOptions.schema';
 
 export function encrypt(payload: string, options: CryptographyOptions): IEncryptionReturn {
 	try {
-		const isValid = isValidPayload(CryptographyOptionsSchema, options);
+		const isValid = isValidPayload({
+			schema: CryptographyOptionsSchema,
+			payload: options,
+			includeLogs: options.includeLogs,
+		});
 		if (!isValid.success) throw new Error('There was an error on the arguments');
 
 		const algorithm = options.algorithm || 'aes-256-cbc';
@@ -42,7 +46,11 @@ export function encrypt(payload: string, options: CryptographyOptions): IEncrypt
 export function decrypt(payload: string, iv: string, options: CryptographyOptions) {
 	try {
 		// Validation
-		const isValid = isValidPayload(CryptographyOptionsSchema, options);
+		const isValid = isValidPayload({
+			schema: CryptographyOptionsSchema,
+			payload: options,
+			includeLogs: options.includeLogs,
+		});
 		if (!isValid.success) throw new Error('There was an error on the arguments');
 
 		const algorithm = options.algorithm || 'aes-256-cbc';

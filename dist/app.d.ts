@@ -6,6 +6,7 @@ declare const CryptographyOptionsSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
     salt: z.ZodString;
     keyLength: z.ZodOptional<z.ZodNumber>;
     ivSize: z.ZodOptional<z.ZodNumber>;
+    includeLogs: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
     type: z.ZodLiteral<"encryption">;
     encodingInput: z.ZodOptional<z.ZodLiteral<"utf8">>;
     encodingOutput: z.ZodOptional<z.ZodEnum<{
@@ -18,6 +19,7 @@ declare const CryptographyOptionsSchema: z.ZodDiscriminatedUnion<[z.ZodObject<{
     salt: z.ZodString;
     keyLength: z.ZodOptional<z.ZodNumber>;
     ivSize: z.ZodOptional<z.ZodNumber>;
+    includeLogs: z.ZodOptional<z.ZodDefault<z.ZodBoolean>>;
     type: z.ZodLiteral<"decryption">;
     encodingInput: z.ZodOptional<z.ZodEnum<{
         hex: "hex";

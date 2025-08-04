@@ -1,4 +1,4 @@
-import z from 'zod';
+import z, { ZodType } from 'zod';
 import { CryptographyOptionsSchema } from '@/schemas/encryptionOptions.schema';
 
 export interface IEncryptionReturn {
@@ -8,3 +8,9 @@ export interface IEncryptionReturn {
 }
 
 export type CryptographyOptions = z.infer<typeof CryptographyOptionsSchema>;
+
+export interface IValidatePayloadParams<T> {
+	schema: ZodType<T>;
+	payload: any;
+	includeLogs?: boolean;
+}

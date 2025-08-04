@@ -6,6 +6,7 @@ const BaseCryptographyOptions = z.object({
 	salt: z.string().trim().nonempty('salt is required').min(16, 'salt must be minimum of 16 characters'),
 	keyLength: z.number().optional(),
 	ivSize: z.number().optional(),
+	includeLogs: z.boolean().default(false).optional(),
 });
 
 // Encryption options schema
