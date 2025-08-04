@@ -1,9 +1,14 @@
 [![npm version](https://img.shields.io/npm/v/@a14313/encryption-utils)](https://www.npmjs.com/package/@a14313/encryption-utils)
+
 # @a14313/encryption-utils
 
 A lightweight and easy-to-use encryption/decryption utility for Node.js using AES (default `aes-256-cbc`) and the built-in `crypto` module.
 
 ---
+
+## Changelogs
+
+Check the [Changelogs](https://github.com/A14313/encryption-utils/blob/main/CHANGELOG.md)
 
 ## ✨ Features
 
@@ -39,16 +44,16 @@ pnpm install @a14313/encryption-utils
 
 ### `options`
 
-| Option           | Type                             | Required | Default     | Description                                                                |
-| ---------------- | -------------------------------- | -------- | ----------- | -------------------------------------------------------------------------- |
-| `algorithm`      | `string`                         | No       | aes-256-cbc | Encryption algorithm (e.g., `'aes-256-cfb'`).                              |
-| `password`       | `string`                         | ✅ Yes   | -           | Password used to derive the encryption/decryption key.                     |
-| `salt`           | `string`                         | ✅ Yes   | -           | Salt used in key derivation.                                               |
-| `keyLength`      | `number`                         | No       | 32          | Length of the derived key in bytes (`16`, `24`, `32`, etc.).               |
-| `ivSize`         | `number`                         | No       | 16          | Size of the IV in bytes (usually `16` for AES).                            |
-| `type`           | `'encryption'` \| `'decryption'` | ✅ Yes   | -           | Operation mode to perform. This is required for type discrimination        |
-| `encodingInput`  | `'utf8'`                         | No       | `'utf8'`.   | Encoding of the input string. For encryption, `utf8`. For decryption `hex` |
-| `encodingOutput` | `'hex'` \| `'base64'`            | No       | `'hex'`.    | Output format of the encrypted string. For decryption, `utf8`.             |
+| Option           | Type                             | Required | Default     | Description                                                                                               |
+| ---------------- | -------------------------------- | -------- | ----------- | --------------------------------------------------------------------------------------------------------- |
+| `algorithm`      | `string`                         | No       | aes-256-cbc | Encryption algorithm (e.g., `'aes-256-cfb'`).                                                             |
+| `password`       | `string`                         | ✅ Yes   | -           | Password used to derive the encryption/decryption key.                                                    |
+| `salt`           | `string`                         | ✅ Yes   | -           | Salt used in key derivation.                                                                              |
+| `keyLength`      | `number`                         | No       | 32          | Length of the derived key in bytes (`16`, `24`, `32`, etc.).                                              |
+| `ivSize`         | `number`                         | No       | 16          | Size of the IV in bytes (usually `16` for AES).                                                           |
+| `type`           | `'encryption'` \| `'decryption'` | No       | -           | Operation mode to perform. This is for type discrimination. The type discrimination is managed internally. Check the [1.2.0](https://github.com/A14313/encryption-utils/blob/main/CHANGELOG.md#120) |
+| `encodingInput`  | `'utf8'`                         | No       | `'utf8'`.   | Encoding of the input string. For encryption, `utf8`. For decryption `hex`                                |
+| `encodingOutput` | `'hex'` \| `'base64'`            | No       | `'hex'`.    | Output format of the encrypted string. For decryption, `utf8`.                                            |
 
 ---
 
@@ -63,7 +68,6 @@ import { encrypt } from '@a14313/encryption-utils';
 const encrypted = encrypt('hello world', {
     password: 'strong-password',
     salt: 'unique-salt',
-    type: 'encryption',
 });
 
 // RETURN:
@@ -91,7 +95,6 @@ import { decrypt } from '@a14313/encryption-utils';
 const decrypted = decrypt(encrypted.value, encrypted.iv, {
     password: 'strong-password',
     salt: 'unique-salt',
-    type: 'decryption',
 });
 
 // RETURN: hello world
@@ -125,7 +128,6 @@ Then, stringify the object:
 const encrypted = encrypt(JSON.stringify(sampleObject), {
     password: 'test',
     salt: 'salty',
-    type: 'encryption',
 });
 ```
 
@@ -145,7 +147,6 @@ Return:
 const decrypted = decrypt(encrypted.value, encrypted.iv, {
     password: 'test',
     salt: 'salty',
-    type: 'decryption',
 });
 ```
 
