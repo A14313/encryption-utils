@@ -1,5 +1,9 @@
 import { createCipheriv, randomBytes, scryptSync, createDecipheriv } from 'crypto';
-import { type IEncryptionReturn, CryptographyOptions } from '@/types';
+import {
+	type IEncryptionReturn,
+	EncryptionOptionsInput,
+	DecryptionOptionsInput,
+} from '@/types';
 import { isValidPayload } from '@/utils';
 import { CryptographyOptionsSchema } from '@/schemas/encryptionOptions.schema';
 
@@ -9,18 +13,24 @@ import { CryptographyOptionsSchema } from '@/schemas/encryptionOptions.schema';
  * @returns {object} An object containing the encrypted value and initialization vector (iv).
  */
 
-export function encrypt(payload: string, options: CryptographyOptions): IEncryptionReturn {
+export function encrypt(payload: string, options: EncryptionOptionsInput): IEncryptionReturn {
 	try {
-		const isValid = isValidPayload(CryptographyOptionsSchema, options);
+		// Inject discriminator
+		const mergedOptions = {
+			...options,
+			type: 'encryption',
+		} as const;
+
+		const isValid = isValidPayload(CryptographyOptionsSchema, mergedOptions);
 		if (!isValid.success) throw new Error('There was an error on the arguments');
 
-		const algorithm = options.algorithm || 'aes-256-cbc';
-		const encodingInput = options.encodingInput || 'utf8';
-		const encodingOutput = options.encodingOutput || 'hex';
-		const keyLength = options.keyLength || 32; // Default key length for AES-256
-		const ivSize = options.ivSize || 16;
+		const algorithm = mergedOptions.algorithm || 'aes-256-cbc';
+		const encodingInput = mergedOptions.encodingInput || 'utf8';
+		const encodingOutput = mergedOptions.encodingOutput || 'hex';
+		const keyLength = mergedOptions.keyLength || 32; // Default key length for AES-256
+		const ivSize = mergedOptions.ivSize || 16;
 
-		const key = scryptSync(options.password, options.salt, keyLength);
+		const key = scryptSync(mergedOptions.password, mergedOptions.salt, keyLength);
 		const iv = randomBytes(ivSize);
 
 		const cipher = createCipheriv(algorithm, key, iv);
@@ -39,18 +49,24 @@ export function encrypt(payload: string, options: CryptographyOptions): IEncrypt
 	}
 }
 
-export function decrypt(payload: string, iv: string, options: CryptographyOptions) {
+export function decrypt(payload: string, iv: string, options: DecryptionOptionsInput) {
 	try {
+		// Inject discriminator
+		const mergedOptions = {
+			...options,
+			type: 'decryption',
+		} as const;
+
 		// Validation
-		const isValid = isValidPayload(CryptographyOptionsSchema, options);
+		const isValid = isValidPayload(CryptographyOptionsSchema, mergedOptions);
 		if (!isValid.success) throw new Error('There was an error on the arguments');
 
-		const algorithm = options.algorithm || 'aes-256-cbc';
-		const password = options.password;
-		const salt = options.salt;
-		const keyLength = options.keyLength || 32;
-		const encodingInput = options.encodingInput || 'hex';
-		const encodingOutput = options.encodingOutput || 'utf8';
+		const algorithm = mergedOptions.algorithm || 'aes-256-cbc';
+		const password = mergedOptions.password;
+		const salt = mergedOptions.salt;
+		const keyLength = mergedOptions.keyLength || 32;
+		const encodingInput = mergedOptions.encodingInput || 'hex';
+		const encodingOutput = mergedOptions.encodingOutput || 'utf8';
 
 		const key = scryptSync(password, salt, keyLength);
 		const bufferedIv = Buffer.from(iv, encodingInput);
