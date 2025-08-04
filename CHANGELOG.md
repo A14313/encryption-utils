@@ -1,5 +1,12 @@
 # @a14313/encryption-utils
 
+## 1.1.0
+
+### Minor Changes
+
+- 5d31942: - Implement minifying the build
+    - Add copyright banner
+
 ## 1.0.0
 
 ### Major Changes
