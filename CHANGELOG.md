@@ -1,5 +1,12 @@
 # @a14313/encryption-utils
 
+## 1.2.0
+
+### Minor Changes
+
+- c086e74: - Removed the requirement to manually set the “type” parameter in encrypt and decrypt.
+    - The functions now auto-assign the correct “type” internally.
+
 ## 1.1.0
 
 ### Minor Changes
