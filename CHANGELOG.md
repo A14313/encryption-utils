@@ -1,5 +1,13 @@
 # @a14313/encryption-utils
 
+## 1.2.4
+
+### Patch Changes
+
+- 95687f0: - Enable sourceMap on the tsconfig
+    - Create customError handler
+    - Improve logging of errors
+
 ## 1.2.3
 
 ### Patch Changes
