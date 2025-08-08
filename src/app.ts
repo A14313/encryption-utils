@@ -52,7 +52,7 @@ export function encrypt(payload: string, options: EncryptionOptionsInput): IEncr
 			throw err;
 		} else if (err instanceof Error) {
 			const message = `Error encrypting data ${err.message}`;
-			console.error(message);
+			console.error(message, err);
 			throw err;
 		} else {
 			const message = 'Unknown error';
@@ -101,8 +101,8 @@ export function decrypt(payload: string, iv: string, options: DecryptionOptionsI
 			console.dir(err.data, { depth: 3, colors: true });
 			throw err;
 		} else if (err instanceof Error) {
-			const message = `Error encrypting data ${err.message}`;
-			console.error(message);
+			const message = `Error decrypting data ${err.message}`;
+			console.error(message, err);
 			throw err;
 		} else {
 			const message = 'Unknown error';
