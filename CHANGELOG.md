@@ -1,5 +1,11 @@
 # @a14313/encryption-utils
 
+## 1.2.5
+
+### Patch Changes
+
+- 4b0b886: Add error stack on the logs for Error type of error
+
 ## 1.2.4
 
 ### Patch Changes
