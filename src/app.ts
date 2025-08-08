@@ -2,6 +2,7 @@ import { createCipheriv, randomBytes, scryptSync, createDecipheriv } from 'crypt
 import { type IEncryptionReturn, EncryptionOptionsInput, DecryptionOptionsInput } from '@/types';
 import { isValidPayload } from '@/utils';
 import { CryptographyOptionsSchema } from '@/schemas/encryptionOptions.schema';
+import CustomError from '@/utils/customError';
 
 /**
  * Encrypts a given payload using the provided encryption or the default is 'AES-256-CBC'.
@@ -22,7 +23,9 @@ export function encrypt(payload: string, options: EncryptionOptionsInput): IEncr
 			payload: mergedOptions,
 			includeLogs: mergedOptions.includeLogs,
 		});
-		if (!isValid.success) throw new Error('There was an error on the arguments');
+		if (!isValid.success) {
+			throw new CustomError('There was an error on the arguments', isValid.errors);
+		}
 
 		const algorithm = mergedOptions.algorithm || 'aes-256-cbc';
 		const encodingInput = mergedOptions.encodingInput || 'utf8';
@@ -43,9 +46,19 @@ export function encrypt(payload: string, options: EncryptionOptionsInput): IEncr
 			value: encrypted,
 		};
 	} catch (err) {
-		const message = err instanceof Error ? `Error encrypting data ${err.message}` : 'Unknown error';
-		console.error(message);
-		throw new Error(message);
+		if (err instanceof CustomError) {
+			console.error(err.message);
+			console.dir(err.data, { depth: 3, colors: true });
+			throw err;
+		} else if (err instanceof Error) {
+			const message = `Error encrypting data ${err.message}`;
+			console.error(message);
+			throw err;
+		} else {
+			const message = 'Unknown error';
+			console.error(message);
+			throw err;
+		}
 	}
 }
 
@@ -63,7 +76,9 @@ export function decrypt(payload: string, iv: string, options: DecryptionOptionsI
 			payload: mergedOptions,
 			includeLogs: mergedOptions.includeLogs,
 		});
-		if (!isValid.success) throw new Error('There was an error on the arguments');
+		if (!isValid.success) {
+			throw new CustomError('There was an error on the arguments', isValid.errors);
+		}
 
 		const algorithm = mergedOptions.algorithm || 'aes-256-cbc';
 		const password = mergedOptions.password;
@@ -81,11 +96,32 @@ export function decrypt(payload: string, iv: string, options: DecryptionOptionsI
 
 		return decrypted;
 	} catch (err) {
-		const message =
-			err instanceof Error
-				? `Error decrypting data. Check the salt or password: ${err.message}`
-				: 'Unknown error';
-		console.error(message);
-		throw new Error(message);
+		if (err instanceof CustomError) {
+			console.error(err.message);
+			console.dir(err.data, { depth: 3, colors: true });
+			throw err;
+		} else if (err instanceof Error) {
+			const message = `Error encrypting data ${err.message}`;
+			console.error(message);
+			throw err;
+		} else {
+			const message = 'Unknown error';
+			console.error(message);
+			throw err;
+		}
 	}
 }
+
+const encrypted = encrypt('Hello world', {
+	password: 'passwordpasswordpasswordpassword',
+	salt: 'saltsaltsaltsaltsalt',
+	// includeLogs: true,
+});
+
+const decrypted = decrypt(encrypted.value, encrypted.iv, {
+	password: 'passwordpasswordpasswordpassword',
+	salt: 'saltsaltsaltsaltsalts',
+});
+
+console.log('encrypted', encrypted);
+console.log('decrypted', decrypted);
