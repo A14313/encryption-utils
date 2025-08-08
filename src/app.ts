@@ -111,17 +111,3 @@ export function decrypt(payload: string, iv: string, options: DecryptionOptionsI
 		}
 	}
 }
-
-const encrypted = encrypt('Hello world', {
-	password: 'passwordpasswordpasswordpassword',
-	salt: 'saltsaltsaltsaltsalt',
-	// includeLogs: true,
-});
-
-const decrypted = decrypt(encrypted.value, encrypted.iv, {
-	password: 'passwordpasswordpasswordpassword',
-	salt: 'saltsaltsaltsaltsalts',
-});
-
-console.log('encrypted', encrypted);
-console.log('decrypted', decrypted);
