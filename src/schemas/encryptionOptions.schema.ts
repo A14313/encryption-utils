@@ -24,7 +24,6 @@ const BaseCryptographyOptions = z.object({
 		.optional(),
 	salt: z.string().trim().nonempty('salt is required').min(8, 'salt must be minimum of 8 characters').optional(),
 	keyLength: z.number().optional(),
-	ivSize: z.number().optional(),
 	includeLogs: z.boolean().default(false).optional(),
 });
 

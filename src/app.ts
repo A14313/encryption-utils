@@ -32,7 +32,7 @@ export function encrypt(payload: string, options: EncryptionOptionsInput): IEncr
 		const encodingInput = mergedOptions.encodingInput || 'utf8';
 		const encodingOutput = mergedOptions.encodingOutput || 'hex';
 		const keyLength = mergedOptions.keyLength || 32; // Default key length for AES-256
-		const ivSize = mergedOptions.ivSize || 16;
+		const ivSize = 16;
 
 		// Key
 		const key = () => {
