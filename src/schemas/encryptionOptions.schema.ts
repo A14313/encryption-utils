@@ -1,8 +1,9 @@
-import z from 'zod';
-import { EncryptionEncoding } from '@/types';
+import z, { RefinementCtx } from 'zod';
+import { EncryptionEncoding, type CryptographyOptions } from '@/types';
 import { randomBytes } from 'crypto';
 
-// 🔑 Key + IV requirements
+
+//  🔑 Key + IV requirements
 
 // For AES, the algorithm name tells the key size:
 // 	•	aes-128-cbc → key must be 16 bytes
@@ -10,6 +11,8 @@ import { randomBytes } from 'crypto';
 // 	•	aes-256-cbc → key must be 32 bytes
 
 // The IV size is always 16 bytes for AES (CBC, CFB, GCM, etc).
+
+// ********************************** Schemas
 
 const BaseCryptographyOptions = z.object({
 	algorithm: z.string().trim().optional(),
@@ -43,14 +46,6 @@ const EncryptionOptions = BaseCryptographyOptions.extend({
 		});
 	}
 
-	if (data.staticKey && !data.staticKeyEncoding) {
-		ctx.addIssue({
-			code: 'custom',
-			message: '"staticKeyEncoding" is needed if the "staticKey" is set',
-			path: ['staticKeyEncoding'],
-		});
-	}
-
 	// Check IV
 	if (data.staticIV && data.staticIVEncoding) {
 		const staticIVBuffer = Buffer.from(data.staticIV, data.staticIVEncoding);
@@ -66,57 +61,9 @@ const EncryptionOptions = BaseCryptographyOptions.extend({
 		}
 	}
 
-	if (data.staticKey && data.staticKeyEncoding && (data.password || data.salt)) {
-		['password', 'salt'].forEach((field) => {
-			if (data[field as keyof typeof data]) {
-				ctx.addIssue({
-					code: 'custom',
-					message: `${field} is not needed if "staticKey" is provided`,
-					path: [field],
-				});
-			}
-		});
-	}
-
-	// Algorithm-based key + IV checks
-	if (data.algorithm) {
-		const match = data.algorithm.match(/^aes-(128|192|256)-(.*)$/);
-		if (!match) {
-			ctx.addIssue({
-				code: 'custom',
-				message: `Unsupported algorithm "${data.algorithm}". Must be like "aes-256-cbc", "aes-192-gcm", "aes-256-cfb", etc.`,
-				path: ['algorithm'],
-			});
-
-			return;
-		}
-
-		const [, bits, mode] = match;
-		const requiredKeyLen = parseInt(bits, 10) / 8; // 128->16, 192->24, 256->32
-
-		// ECB has no IV
-		if (mode === 'ecb') {
-			ctx.addIssue({
-				code: 'custom',
-				message: 'ecb mode for algorithm is not supported.',
-				path: ['algorithm'],
-			});
-
-			return;
-		}
-
-		// Check the staticKey length (if provided)
-		if (data.staticKey && data.staticKeyEncoding) {
-			const staticKeyBuffer = Buffer.from(data.staticKey, data.staticKeyEncoding);
-			if (staticKeyBuffer.length !== requiredKeyLen) {
-				ctx.addIssue({
-					code: 'custom',
-					message: `Invalid staticKey length. Expected ${requiredKeyLen} bytes for ${data.algorithm}, got ${staticKeyBuffer.length}.`,
-					path: ['staticKey'],
-				});
-			}
-		}
-	}
+	validateStaticKey(data, ctx);
+	validatePasswordSaltWithStaticKey(data, ctx);
+	validateAlgorithm(data, ctx);
 });
 
 // Decryption options schema
@@ -128,33 +75,28 @@ const DecryptionOptions = BaseCryptographyOptions.extend({
 	staticKey: z.string().trim().nonempty('staticKey needs to have a value if set.').optional(),
 	staticKeyEncoding: z.enum(EncryptionEncoding).optional(),
 }).superRefine((data, ctx) => {
-	if (data.staticKey && !data.staticKeyEncoding) {
-		ctx.addIssue({
-			code: 'custom',
-			message: '"staticKeyEncoding" is needed if the "staticKey" is set',
-			path: ['staticKeyEncoding'],
-		});
-	}
+	validateStaticKey(data, ctx);
 
-	if (data.staticKey && data.staticKeyEncoding && (data.password || data.salt)) {
-		['password', 'salt'].forEach((field) => {
-			if (data[field as keyof typeof data]) {
-				ctx.addIssue({
-					code: 'custom',
-					message: `${field} is not needed if "staticKey" is provided`,
-					path: [field],
-				});
-			}
-		});
-	}
+	validatePasswordSaltWithStaticKey(data, ctx);
 
+	validateAlgorithm(data, ctx);
+});
+
+// Discriminated union
+const CryptographyOptionsSchema = z.discriminatedUnion('type', [EncryptionOptions, DecryptionOptions]);
+
+// ! ******************************** End of Schemas
+
+
+// ********************************** Validation functions
+function validateAlgorithm(data: CryptographyOptions, ctx: RefinementCtx) {
 	// Algorithm-based key + IV checks
 	if (data.algorithm) {
 		const match = data.algorithm.match(/^aes-(128|192|256)-(.*)$/);
 		if (!match) {
 			ctx.addIssue({
 				code: 'custom',
-				message: `Unsupported algorithm "${data.algorithm}". Must be like "aes-256-cbc", "aes-192-gcm", "aes-256-cfb", etc.`,
+				message: `Unsupported algorithm "${data.algorithm}". Must be like "aes-256-cbc", "aes-256-cfb", etc.`,
 				path: ['algorithm'],
 			});
 
@@ -187,9 +129,32 @@ const DecryptionOptions = BaseCryptographyOptions.extend({
 			}
 		}
 	}
-});
+}
 
-// Discriminated union
-const CryptographyOptionsSchema = z.discriminatedUnion('type', [EncryptionOptions, DecryptionOptions]);
+function validatePasswordSaltWithStaticKey(data: CryptographyOptions, ctx: RefinementCtx) {
+	if (data.staticKey && data.staticKeyEncoding && (data.password || data.salt)) {
+		['password', 'salt'].forEach((field) => {
+			if (data[field as keyof typeof data]) {
+				ctx.addIssue({
+					code: 'custom',
+					message: `${field} is not needed if "staticKey" is provided`,
+					path: [field],
+				});
+			}
+		});
+	}
+}
+
+function validateStaticKey(data: CryptographyOptions, ctx: RefinementCtx) {
+	if (data.staticKey && !data.staticKeyEncoding) {
+		ctx.addIssue({
+			code: 'custom',
+			message: '"staticKeyEncoding" is needed if the "staticKey" is set',
+			path: ['staticKeyEncoding'],
+		});
+	}
+}
+
+// ! ******************************** End of Validation functions
 
 export { CryptographyOptionsSchema, EncryptionOptions, DecryptionOptions };
