@@ -3,7 +3,7 @@ import { EncryptionOptions, DecryptionOptions } from '@/schemas/encryptionOption
 
 export interface IEncryptionReturn {
 	message: string;
-	iv: string;
+	iv?: string;
 	value: string;
 }
 
@@ -15,4 +15,9 @@ export interface IValidatePayloadParams<T> {
 	schema: ZodType<T>;
 	payload: any;
 	includeLogs?: boolean;
+}
+
+export enum EncryptionEncoding {
+	hex = 'hex',
+	base64 = 'base64',
 }
