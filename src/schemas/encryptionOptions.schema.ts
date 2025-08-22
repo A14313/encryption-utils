@@ -70,7 +70,7 @@ const DecryptionOptions = BaseCryptographyOptions.extend({
 	type: z.literal('decryption'),
 	encodingInput: z.enum(EncryptionEncoding).optional(),
 	encodingOutput: z.literal('utf8').optional(),
-	staticIVEncodingInput: z.enum(EncryptionEncoding).optional(),
+	IVEncodingInput: z.enum(EncryptionEncoding).optional(),
 	staticKey: z.string().trim().nonempty('staticKey needs to have a value if set.').optional(),
 	staticKeyEncoding: z.enum(EncryptionEncoding).optional(),
 }).superRefine((data, ctx) => {

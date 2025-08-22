@@ -121,7 +121,7 @@ export function decrypt(payload: string, iv: string, options: DecryptionOptionsI
 		const encodingInput = mergedOptions.encodingInput || 'hex';
 		const encodingOutput = mergedOptions.encodingOutput || 'utf8';
 
-		const bufferedIv = Buffer.from(iv, mergedOptions.staticIVEncodingInput || encodingInput);
+		const bufferedIv = Buffer.from(iv, mergedOptions.IVEncodingInput || encodingInput);
 
 		// Key
 		const key = () => {
