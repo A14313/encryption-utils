@@ -6,7 +6,6 @@ export default defineConfig({
 	dts: true,
 	format: ['cjs'],
 	clean: true,
-	sourcemap: true,
 	tsconfig: './tsconfig.json',
 	minify: true,
 	minifyIdentifiers: true,
