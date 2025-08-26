@@ -1,9 +1,9 @@
 import z, { ZodType } from 'zod';
-import { EncryptionOptions, DecryptionOptions } from '@/schemas/encryptionOptions.schema';
+import { EncryptionOptions, DecryptionOptions, CryptographyOptionsSchema } from '@/schemas/encryptionOptions.schema';
 
 export interface IEncryptionReturn {
 	message: string;
-	iv: string;
+	iv?: string;
 	value: string;
 }
 
@@ -16,3 +16,10 @@ export interface IValidatePayloadParams<T> {
 	payload: any;
 	includeLogs?: boolean;
 }
+
+export enum EncryptionEncoding {
+	hex = 'hex',
+	base64 = 'base64',
+}
+
+export type CryptographyOptions = z.infer<typeof CryptographyOptionsSchema>;
