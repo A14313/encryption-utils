@@ -1,9 +1,8 @@
 import { createCipheriv, randomBytes, scryptSync, createDecipheriv } from 'crypto';
-import { type IEncryptionReturn, EncryptionOptionsInput, DecryptionOptionsInput, EncryptionEncoding } from '@/types';
+import { type IEncryptionReturn, EncryptionOptionsInput, DecryptionOptionsInput } from '@/types';
 import { isValidPayload } from '@/utils';
 import { CryptographyOptionsSchema } from '@/schemas/encryptionOptions.schema';
 import CustomError from '@/utils/customError';
-import sampleObj from './sampleObj';
 
 /**
  * Encrypts a given payload using the provided encryption or the default is 'AES-256-CBC'.
@@ -169,35 +168,3 @@ export function decrypt(payload: string, iv: string, options: DecryptionOptionsI
 		}
 	}
 }
-
-const encrypted = encrypt(JSON.stringify(sampleObj), {
-	// password:
-	// 	'b45dc7863cabd8cb4241d9acc96b5982d34b27847c9f7b658b74c4bc311d5e1bfc099cdf1c1b9356aa6afd995d802c8d6574171318d684848cb0a1fb3f3018a50fcc5de01a75b6a709de163c24a533ae',
-	// salt: 'm7QERFMR0V267eOIsgK/Ga4yt3/vMfpOwvon3idxuIY=',
-	// staticIV: '8a75c51c0bba4749829335752c4f78e5',
-	// staticIVEncoding: EncryptionEncoding.hex,
-	staticKey: 'm7QERFMR0V267eOIsgK/Ga4yt3/vMfpOwvon3idxuIY=',
-	staticKeyEncoding: EncryptionEncoding.base64,
-	// keyLength: 16,
-	// algorithm: 'aes-128-cbc',
-	encodingOutput: EncryptionEncoding.base64,
-	includeLogs: true,
-});
-
-// const decrypted = decrypt(encrypted.value, encrypted.iv!, {
-// 	password:
-// 		'b45dc7863cabd8cb4241d9acc96b5982d34b27847c9f7b658b74c4bc311d5e1bfc099cdf1c1b9356aa6afd995d802c8d6574171318d684848cb0a1fb3f3018a50fcc5de01a75b6a709de163c24a533ae',
-// 	salt: 'm7QERFMR0V267eOIsgK/Ga4yt3/vMfpOwvon3idxuIY=',
-// 	// staticIVEncodingInput: 'hex',
-
-// 	encodingInput: EncryptionEncoding.base64,
-// 	// staticKey: '1ba69ee97cd392cd9c2ac4d842991fc0',
-// 	// staticKeyEncoding: EncryptionEncoding.hex,
-// 	// keyLength: 16,
-// 	// algorithm: 'aes-128-cbc',
-// 	includeLogs: true,
-// });
-
-console.log(encrypted);
-// console.log(JSON.parse(decrypted));
-console.log(EncryptionEncoding);

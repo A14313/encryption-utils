@@ -2,7 +2,6 @@ import z, { RefinementCtx } from 'zod';
 import { EncryptionEncoding, type CryptographyOptions } from '@/types';
 import { randomBytes } from 'crypto';
 
-
 //  🔑 Key + IV requirements
 
 // For AES, the algorithm name tells the key size:
@@ -85,7 +84,6 @@ const DecryptionOptions = BaseCryptographyOptions.extend({
 const CryptographyOptionsSchema = z.discriminatedUnion('type', [EncryptionOptions, DecryptionOptions]);
 
 // ! ******************************** End of Schemas
-
 
 // ********************************** Validation functions
 function validateAlgorithm(data: CryptographyOptions, ctx: RefinementCtx) {
