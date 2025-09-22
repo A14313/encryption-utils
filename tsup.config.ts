@@ -1,4 +1,5 @@
 import { defineConfig } from 'tsup';
+import pckg from './package.json';
 
 export default defineConfig({
 	entry: ['src/app.ts'],
@@ -12,6 +13,12 @@ export default defineConfig({
 	minifySyntax: true,
 	minifyWhitespace: true,
 	banner: {
-		js: '/** (c) 2025 Antonio Carlo Autor */',
+		js: `/**
+* Created by Antonio Carlo "Anton" Autor 2025
+* Package: ${pckg.name}
+* Description: ${pckg.description}
+* Version: ${pckg.version}
+* Build Date: ${new Date().toISOString()}
+*/`,
 	},
 });
