@@ -1,5 +1,5 @@
 import z, { RefinementCtx } from 'zod';
-import { EncryptionEncoding, type CryptographyOptions } from '@/types';
+import { type CryptographyOptions } from '@/types';
 import { randomBytes } from 'crypto';
 
 //  🔑 Key + IV requirements
@@ -26,15 +26,17 @@ const BaseCryptographyOptions = z.object({
 	includeLogs: z.boolean().default(false).optional(),
 });
 
+const encryptionEncodingValues = ['base64', 'hex'] as const;
+
 // Encryption options schema
 const EncryptionOptions = BaseCryptographyOptions.extend({
 	type: z.literal('encryption'),
 	encodingInput: z.literal('utf8').optional(),
-	encodingOutput: z.enum(EncryptionEncoding).optional(),
+	encodingOutput: z.enum(encryptionEncodingValues).optional(),
 	staticIV: z.string().trim().nonempty('staticIV needs to have a value if set.').optional(),
-	staticIVEncoding: z.enum(EncryptionEncoding).optional(),
+	staticIVEncoding: z.enum(encryptionEncodingValues).optional(),
 	staticKey: z.string().trim().nonempty('staticKey needs to have a value if set.').optional(),
-	staticKeyEncoding: z.enum(EncryptionEncoding).optional(),
+	staticKeyEncoding: z.enum(encryptionEncodingValues).optional(),
 }).superRefine((data, ctx) => {
 	if (data.staticIV && !data.staticIVEncoding) {
 		ctx.addIssue({
@@ -67,11 +69,11 @@ const EncryptionOptions = BaseCryptographyOptions.extend({
 // Decryption options schema
 const DecryptionOptions = BaseCryptographyOptions.extend({
 	type: z.literal('decryption'),
-	encodingInput: z.enum(EncryptionEncoding).optional(),
+	encodingInput: z.enum(encryptionEncodingValues).optional(),
 	encodingOutput: z.literal('utf8').optional(),
-	IVEncodingInput: z.enum(EncryptionEncoding).optional(),
+	IVEncodingInput: z.enum(encryptionEncodingValues).optional(),
 	staticKey: z.string().trim().nonempty('staticKey needs to have a value if set.').optional(),
-	staticKeyEncoding: z.enum(EncryptionEncoding).optional(),
+	staticKeyEncoding: z.enum(encryptionEncodingValues).optional(),
 }).superRefine((data, ctx) => {
 	validateStaticKey(data, ctx);
 
