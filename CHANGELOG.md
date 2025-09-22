@@ -1,12 +1,18 @@
 # @a14313/encryption-utils
 
+## 1.3.1
+
+### Patch Changes
+
+- 77371d2: Update configs from build
+
 ## 1.3.0
 
 ### Minor Changes
 
 - f069006: Implement the staticIV and staticKey. This will override the default of having to generate the IV and key.
-  - Implement a EncryptionEncoding enum for the options of encoding
-  - Deprecate the `ivSize` property. Make it not configurable and always fix to 16.
+    - Implement a EncryptionEncoding enum for the options of encoding
+    - Deprecate the `ivSize` property. Make it not configurable and always fix to 16.
 
 ## 1.2.5
 
