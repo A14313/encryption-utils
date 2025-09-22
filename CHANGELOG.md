@@ -1,5 +1,11 @@
 # @a14313/encryption-utils
 
+## 1.3.2
+
+### Patch Changes
+
+- 3a6962d: Change the EncryptionEncoding as the type of the parameter for encoding. Make it literal as base64 or hex
+
 ## 1.3.1
 
 ### Patch Changes
