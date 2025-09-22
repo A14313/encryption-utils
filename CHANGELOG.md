@@ -1,5 +1,12 @@
 # @a14313/encryption-utils
 
+## 1.3.3
+
+### Patch Changes
+
+- d411e55: Improve package.json
+  Add peerDependencies, engine requirements, and engineStrict
+
 ## 1.3.2
 
 ### Patch Changes
